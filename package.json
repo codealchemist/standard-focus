@@ -1,0 +1,28 @@
+{
+  "name": "standard-focus",
+  "version": "1.0.0",
+  "description": "Lint your code with StandardJS and focus on one error at a time.",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard",
+    "start": "node src/index.js"
+  },
+  "bin": {
+    "standard-focus": "src/index.js"
+  },
+  "keywords": [
+    "standard",
+    "focus",
+    "test",
+    "style"
+  ],
+  "author": "Alberto Miranda",
+  "repository": "codealchemist/standard-focus",
+  "license": "MIT",
+  "dependencies": {
+    "clivas": "^0.2.0",
+    "gaze": "^1.1.2",
+    "standard": "^8.6.0",
+    "yargs": "^6.6.0"
+  }
+}
