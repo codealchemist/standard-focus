@@ -2,7 +2,7 @@
 const standard = require('standard')
 const gaze = require('gaze')
 const fs = require('fs')
-const {resolve} = require('path')
+const path = require('path')
 const clivas = require('clivas')
 const args = require('yargs').argv
 
@@ -10,7 +10,7 @@ const args = require('yargs').argv
 const glob = ['**/*.js', '!node_modules', '!node_modules/**']
 
 // print ascii art
-var artFile = resolve('src/ascii-art.txt')
+var artFile = path.join(__dirname, './ascii-art.txt')
 var art = fs.readFileSync(artFile, 'utf8')
 console.log(art)
 
