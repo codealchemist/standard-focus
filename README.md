@@ -1,6 +1,8 @@
 # standard-focus
 Lint your code with StandardJS and focus on one error at a time.
 
+![screenshot](https://cldup.com/KgYRC8SNwu.gif)
+
 ## Install
 
 `npm install --save-dev standard-focus`
