@@ -5,7 +5,7 @@ const fs = require('fs')
 const path = require('path')
 const clivas = require('clivas')
 const args = require('yargs').argv
-const replaceLine = require('./replace-line')
+const replaceLine = require('line-replace')
 
 let fixing = false
 let lastMessage
@@ -117,13 +117,13 @@ function fix (error, callback) {
   const source = error.source
 
   // Fix: Comment unused code.
-  if (error.message.match(/is assigned a value but never used/)) {
-    const fixedString = `// ${source} // TODO: Remove unused code.\n`
+  if (error.message.match(/(is assigned a value but never used|is defined but never used)/)) {
+    const fixedString = `// ${source} // TODO: Remove unused code.`
 
     // Write fix to file.
     replaceLine({
       file: error.file,
-      lineNumber: error.line,
+      line: error.line,
       text: fixedString,
       callback
     })
@@ -136,12 +136,12 @@ function fix (error, callback) {
     const spaces = ' '.repeat(expectedCount)
     const foundCount = spaceMatch[2]
     const spacesFound = ' '.repeat(foundCount)
-    const fixedString = source.replace(spacesFound, spaces) + '\n'
+    const fixedString = source.replace(spacesFound, spaces)
 
     // Write fix to file.
     replaceLine({
       file: error.file,
-      lineNumber: error.line,
+      line: error.line,
       text: fixedString,
       callback
     })
@@ -150,12 +150,12 @@ function fix (error, callback) {
 
   // Fix: ;
   if (error.message.match(/Extra semicolon/)) {
-    const fixedString = source.replace(';', '') + '\n'
+    const fixedString = source.replace(';', '')
 
     // Write fix to file.
     replaceLine({
       file: error.file,
-      lineNumber: error.line,
+      line: error.line,
       text: fixedString,
       callback
     })
@@ -164,12 +164,12 @@ function fix (error, callback) {
 
   // Fix: Tab.
   if (error.message.match(/(Unexpected tab character)|(Mixed spaces and tabs)/)) {
-    const fixedString = source.replace(/\t/g, '  ') + '\n'
+    const fixedString = source.replace(/\t/g, '  ')
 
     // Write fix to file.
     replaceLine({
       file: error.file,
-      lineNumber: error.line,
+      line: error.line,
       text: fixedString,
       callback
     })
@@ -183,7 +183,10 @@ function fix (error, callback) {
     const fixedLine = results.results[0]
     let fixedString = fixedLine.output
 
-    if (!fixedString) {
+    let notFixed = false
+    if (fixedString && error.source === fixedString.replace('\n', '')) notFixed = true
+
+    if (!fixedString || notFixed) {
       clivas.clear()
       clivas.line(lastMessage)
       clivas.line(`{red:Unable to auto-fix, sorry.}`)
@@ -194,8 +197,9 @@ function fix (error, callback) {
     // Write fix to file.
     replaceLine({
       file: error.file,
-      lineNumber: error.line,
+      line: error.line,
       text: `${fixedString}`,
+      addNewLine: false,
       callback
     })
   })
