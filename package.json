@@ -1,6 +1,6 @@
 {
   "name": "standard-focus",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Lint your code with StandardJS and focus on one error at a time.",
   "main": "index.js",
   "scripts": {
